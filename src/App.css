@@ -1,0 +1,44 @@
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  width: 100%;
+  
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-60px);
+  }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+@keyframes floatxy {
+  0% {
+    transform: translate(10px, 0px);
+  }
+  25% {
+    transform: translate(60px, -10px);
+  }
+  50% {
+    transform: translate(60px, -20px);
+  }
+  75% {
+    transform: translate(-70px, -10px);
+  }
+  100% {
+    transform: translate(50px, 0px);
+  }
+}
+
+.animate-floatxy {
+  animation: floatxy 6s ease-in-out infinite;
+}
