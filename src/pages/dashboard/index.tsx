@@ -36,7 +36,7 @@ export const DashBoardLayout = () => {
       {/* Sidebar - slide in/out on mobile, fixed on desktop */}
       <aside
         className={`
-          fixed inset-y-0 left-0 z-40 w-64  text-white transform
+          fixed inset-y-0 left-0 z-40 w-64 bg-white text-blue-500 transform
           transition-transform duration-300 ease-in-out
           lg:relative lg:translate-x-0 lg:h-screen  lg:flex lg:flex-col lg:overflow-y-auto
           ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}

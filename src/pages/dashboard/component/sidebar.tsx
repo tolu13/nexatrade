@@ -26,16 +26,7 @@ export const SideBar = () => {
       </div>
 
       {/* Sidebar */}
-      <aside
-        className={`
-          fixed top-0 left-0 h-full w-64 bg-white text-blue-500 flex flex-col
-          transform transition-transform duration-300 ease-in-out
-          z-40
-          ${isOpen ? "translate-x-0" : "-translate-x-full"}
-          lg:static lg:translate-x-0 lg:h-screen lg:overflow-y-auto lg:flex
-          lg:flex-col
-        `}
-      >
+      
         <div className="flex flex-col justify-between h-full">
           <div>
             <div className="p-4">
@@ -74,7 +65,7 @@ export const SideBar = () => {
             </button>
           </div>
         </div>
-      </aside>
+    
 
       {/* Overlay for mobile when sidebar is open */}
       {isOpen && (
