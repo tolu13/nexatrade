@@ -6,6 +6,7 @@ import { useAuthStore } from "../../lib/store/authstore";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { PiEye, PiEyeClosed } from "react-icons/pi";
+import { AxiosError } from "axios";
 
 const loginSchema = z.object({
     email: z.string().email({ message: 'Invalid email' }),
@@ -25,14 +26,25 @@ const  handleSubmit = async (e: React.FormEvent) => {
     const result = loginSchema.safeParse({ email, password });
     if (!result.success) {
       // Handle validation errors
-      console.log(result.error.format());
+     toast.error(result.error.errors[0]?.message || "Invalid credentials");
       return;
     }
+
+    try  {
     await login(email, password);
     toast.success('Login successful', {
         onClose: () => navigate('/dashboard'),
         autoClose: 1500, // Adjust time as needed
       });
+    }  catch (error: unknown) {
+    let message = "❌ Login failed. Please check your email or password.";
+
+  if (error instanceof AxiosError) {
+    message = error.response?.data?.message || message;
+  }
+
+  toast.error(message); 
+}
 }
 
 return (<div className="flex bg white w-full min-h-screen overflow-hidden">

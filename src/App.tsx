@@ -9,6 +9,7 @@ import { Market } from './pages/market'
 import { Transactions } from './pages/transacions'
 import { PrivateRoute } from './components/protected_route'
 import Earn from './pages/earn'
+import {SignupPage} from './pages/signup'
 
 function App() {
 
@@ -19,6 +20,7 @@ function App() {
       <ToastContainer position="top-right" autoClose={3000} />
       <Routes>
         {/* Public Route */}
+        <Route path="/signup" element={<SignupPage />} />
         <Route path="/login" element={<LoginPage />} />
 
         {/* Protected Route with nested routes */}

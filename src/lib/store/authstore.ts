@@ -23,6 +23,7 @@ interface AuthState {
   loading: boolean;
   error: string | null;
   login: (email: string, password: string) => Promise<void>;
+  signup: (email: string, password: string, role: string) => Promise<void>;
   logout: () => void;
 }
 
@@ -53,6 +54,22 @@ export const useAuthStore = create<AuthState>()(
           });
         }
       },
+
+      signup: async (email: string, password: string, role: string) => {
+        set({ loading: true, error: null });
+        try {
+          await api.post('/auth/signup', { email, password, role });
+          set({ loading: false });
+        } catch (error) {
+          const err = error as AxiosError<{ message: string }>;
+          set({
+            error: err.response?.data?.message || 'Signup failed',
+            loading: false,
+          });
+          throw err;
+        }
+      },
+
       logout: () => {
         localStorage.removeItem("auth-storage");
         set({ token: null, user: null });
