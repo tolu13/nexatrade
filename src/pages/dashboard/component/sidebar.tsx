@@ -2,7 +2,7 @@ import { useState } from "react";
 import { FaChartLine, FaHome, FaSignInAlt,  FaBars, FaTimes, FaCoins, FaSyncAlt } from "react-icons/fa";
 import { useAuthStore } from "../../../lib/store/authstore";
 import { NavLink } from "react-router-dom";
-import logo from "../../../assets/nexatrade-high-resolution-logo.png";
+import logo from "/nexatrade-high-resolution-logo.png";
 
 
 export const SideBar = () => {

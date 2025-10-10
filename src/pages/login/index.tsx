@@ -1,6 +1,6 @@
 import { useState } from "react"
 import crypto from "../../assets/Cryptocurrency mining.png"
-import nexatrade from "../../assets/nexatrade-high-resolution-logo.png"
+import nexatrade from "/nexatrade-high-resolution-logo.png"
 import {z} from "zod"
 import { useAuthStore } from "../../lib/store/authstore";
 import { toast } from "react-toastify";
