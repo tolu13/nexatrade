@@ -41,10 +41,10 @@ export const useOrderBookStore = create<OrderBookState>((set, get) => ({
 
     if (socket && socket.connected) return;
 
-    const newSocket: SocketIOClient.Socket = io("http://localhost:5000/orderbook", {
-      auth: { token },
-      transports: ["websocket"],
-    });
+   const newSocket = io(import.meta.env.VITE_SOCKET_URL, {
+  auth: { token },
+  transports: ["websocket"],
+});
 
     newSocket.on("connect", () => {
       set({ connected: true });
