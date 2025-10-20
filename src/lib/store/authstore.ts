@@ -1,8 +1,8 @@
-import { create } from 'zustand';
-import { createJSONStorage, persist } from 'zustand/middleware';
+import { create } from "zustand";
+import { createJSONStorage, persist } from "zustand/middleware";
 
-import api from '../api';
-import type { AxiosError } from 'axios';
+import api from "../api";
+import type { AxiosError } from "axios";
 
 interface User {
   id: string;
@@ -37,33 +37,40 @@ export const useAuthStore = create<AuthState>()(
       login: async (email, password) => {
         set({ loading: true, error: null });
         try {
-          const response = await api.post<LoginResponse>('/auth/login', {
+          const response = await api.post<LoginResponse>("/auth/login", {
             email,
             password,
           });
+          console.log("🔹 Login API response:", response);
+
+          if (!response.data?.access_token) {
+            throw new Error("No token received from server");
+          }
           set({
             token: response.data.access_token,
             user: response.data.user,
             loading: false,
           });
         } catch (error) {
-            const err =  error as AxiosError<{message: string}>
+          const err = error as AxiosError<{ message: string }>;
           set({
-            error: err.response?.data?.message || 'Login failed',
+            error: err.response?.data?.message || "Login failed",
             loading: false,
           });
+          throw err;
         }
+        
       },
 
       signup: async (email: string, password: string, role: string) => {
         set({ loading: true, error: null });
         try {
-          await api.post('/auth/signup', { email, password, role });
+          await api.post("/auth/signup", { email, password, role });
           set({ loading: false });
         } catch (error) {
           const err = error as AxiosError<{ message: string }>;
           set({
-            error: err.response?.data?.message || 'Signup failed',
+            error: err.response?.data?.message || "Signup failed",
             loading: false,
           });
           throw err;
@@ -76,7 +83,7 @@ export const useAuthStore = create<AuthState>()(
       },
     }),
     {
-      name: 'auth-storage', // name of the item in storage
+      name: "auth-storage", // name of the item in storage
       storage: createJSONStorage(() => localStorage), // (optional) by default, 'localStorage' is used
     }
   )

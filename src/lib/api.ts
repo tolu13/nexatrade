@@ -1,15 +1,12 @@
-
-// src/lib/api.ts
 import axios from "axios";
 import { useAuthStore } from "./store/authstore";
+import { toast } from "react-toastify";
 
-// Create a single axios instance
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL || "https://nexatradeserver.onrender.com/",
-  
+  withCredentials: true,
 });
 
-// Automatically attach token to requests
 api.interceptors.request.use((config) => {
   const token = useAuthStore.getState().token;
   if (token) {
@@ -18,15 +15,24 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
-// Handle expired/invalid tokens globally
+// ✅ FIX: Only trigger redirect on 401 for *protected* routes
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response?.status === 401) {
-      console.warn("Token expired or unauthorized. Redirecting to login...");
+    const status = error.response?.status;
+    const url = error.config?.url || "";
+
+    // Ignore 401s from login or signup routes
+    if (
+      status === 401 &&
+      !url.includes("/auth/login") &&
+      !url.includes("/auth/signup")
+    ) {
+      toast.error("Session expired. Please log in again.");
       useAuthStore.getState().logout();
       window.location.href = "/login";
     }
+
     return Promise.reject(error);
   }
 );

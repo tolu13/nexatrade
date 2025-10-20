@@ -70,7 +70,7 @@ export const DashboardHome = () => {
         </h1>
       </header>
 
-      <main className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <main className="grid grid-cols-1 lg:grid-cols-3 gap-8 `">
         {/* Portfolio Section */}
         <section className="lg:col-span-1 bg-white rounded-lg shadow-md border border-gray-200 p-6">
           <Portfolio />

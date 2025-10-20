@@ -26,7 +26,9 @@ const  handleSubmit = async (e: React.FormEvent) => {
     const result = loginSchema.safeParse({ email, password });
     if (!result.success) {
       // Handle validation errors
-     toast.error(result.error.errors[0]?.message || "Invalid credentials");
+     toast.error(result.error.errors[0]?.message || "Invalid credentials", {
+        autoClose:3000
+     });
       return;
     }
 
