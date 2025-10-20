@@ -1,85 +1,120 @@
-import { useState } from "react"
-import crypto from "../../assets/Cryptocurrency mining.png"
-import nexatrade from "/nexatrade-high-resolution-logo.png"
-import {z} from "zod"
-import { useAuthStore } from "../../lib/store/authstore";
-import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 import { PiEye, PiEyeClosed } from "react-icons/pi";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { z } from "zod";
+import { useAuthStore } from "../../lib/store/authstore";
 import { AxiosError } from "axios";
+import nexatradeLogo from "/nexatrade-high-resolution-logo.png";
+import cryptoImg from "../../assets/Cryptocurrency mining.png";
 
 const loginSchema = z.object({
-    email: z.string().email({ message: 'Invalid email' }),
-    password: z.string().min(6, { message: 'Password must be at least 6 characters' }),
-  });
+  email: z.string().email({ message: "Invalid email" }),
+  password: z.string().min(6, { message: "Password must be at least 6 characters" }),
+});
 
-export const LoginPage = () =>   {
+export const LoginPage = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const { login } = useAuthStore();
+  const navigate = useNavigate();
 
-const [email, setEmail] =  useState('')
-const [password, setPassword] = useState('')
-const [showPassword, showSetPassword] = useState(false)
-const {login} = useAuthStore();
-const navigate = useNavigate();
-
-const  handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const result = loginSchema.safeParse({ email, password });
+
     if (!result.success) {
-      // Handle validation errors
-     toast.error(result.error.errors[0]?.message || "Invalid credentials", {
-        autoClose:3000
-     });
+      toast.error(result.error.errors[0]?.message || "Invalid credentials", {
+        autoClose: 3000,
+      });
       return;
     }
 
-    try  {
-    await login(email, password);
-    toast.success('Login successful', {
-        onClose: () => navigate('/dashboard'),
-        autoClose: 1500, // Adjust time as needed
+    try {
+      await login(email, password);
+      toast.success("✅ Login successful", {
+        onClose: () => navigate("/dashboard"),
+        autoClose: 1500,
       });
-    }  catch (error: unknown) {
-    let message = "❌ Login failed. Please check your email or password.";
+    } catch (error: unknown) {
+      let message = "❌ Login failed. Please check your email or password.";
 
-  if (error instanceof AxiosError) {
-    message = error.response?.data?.message || message;
-  }
+      if (error instanceof AxiosError) {
+        message = error.response?.data?.message || message;
+      }
 
-  toast.error(message); 
-}
-}
+      toast.error(message, { autoClose: 3000 });
+    }
+  };
 
-return (<div className="flex bg white w-full min-h-screen overflow-hidden">
-    <div className="grid grid-cols-1 md:grid-cols-3 bg-[#BDDDFC] w-full  p-4 md:p-10 m-8 md:m-10 rounded-2xl">
-    <div className="bg-inherit rounded-l-4xl w-full">
-    <img src={nexatrade} alt="logo" className="w-55 h-45 mb-3 mix-blend-multiply object-contain justify-start"/>
-        <form onSubmit = {handleSubmit} >
-            <h3 className="text-3xl text-[#6A89A7] text-balance text-center mb-8">Welcome back input your details to login </h3>
-            <input type="email" value={email} onChange={(e) => setEmail (e.target.value)} placeholder="email" className="bg-white mt-9 border-2 max-w-sm py-3 px-3 w-full rounded-2xl placeholder:text-[#384959]" />
-            <div className="relative">
-            <input  type={showPassword ? 'text': 'password'} value={password} onChange={(e) => setPassword (e.target.value)} placeholder="password" className="bg-white mt-7 border-2 max-w-sm py-3 px-3 w-full rounded-2xl placeholder:text-[#384959]"/>
-            <span
-            className="absolute md:right-28 bottom-4 right-[26px] "
-            onClick={() => showSetPassword((prev) => !prev )}
-            >
-            {showPassword? <PiEye/> :  <PiEyeClosed />}
-            </span>
+  return (
+    <div className="flex w-full min-h-screen bg-[#BDDDFC] justify-center items-center p-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 w-full max-w-5xl bg-white rounded-3xl shadow-xl overflow-hidden">
+        {/* Left Section (Form) */}
+        <div className="flex flex-col justify-center items-center p-8 md:p-12">
+          <img
+            src={nexatradeLogo}
+            alt="NexaTrade Logo"
+            className="w-40 mb-6 mix-blend-multiply"
+          />
+          <h2 className="text-2xl font-semibold text-[#2239A5] mb-6 text-center">
+            Welcome back! Log in to your account
+          </h2>
+
+          <form onSubmit={handleSubmit} className="w-full max-w-sm">
+            <input
+              type="email"
+              value={email}
+              placeholder="Email"
+              className="w-full p-3 mb-4 border rounded-xl focus:ring-2 focus:ring-blue-400 outline-none"
+              onChange={(e) => setEmail(e.target.value)}
+            />
+
+            <div className="relative mb-4">
+              <input
+                type={showPassword ? "text" : "password"}
+                value={password}
+                placeholder="Password"
+                className="w-full p-3 border rounded-xl focus:ring-2 focus:ring-blue-400 outline-none"
+                onChange={(e) => setPassword(e.target.value)}
+              />
+              <span
+                className="absolute right-4 top-3 cursor-pointer text-gray-500"
+                onClick={() => setShowPassword((prev) => !prev)}
+              >
+                {showPassword ? <PiEye /> : <PiEyeClosed />}
+              </span>
             </div>
-            
 
-            <button className="px-3 py-3 mt-5 bg-[#2239A5] w-full max-w-sm rounded-2xl text-white hover:border-blue-700 hover:cursor-pointer" type="submit">Login</button>
-        </form>
+            <button
+              type="submit"
+              className="w-full py-3 bg-[#2239A5] text-white rounded-xl hover:bg-[#132a90] transition"
+            >
+              Login
+            </button>
 
-    </div>
-    <div className="md:block hidden md:col-span-2 bg-[#88BDF2] rounded-r-4xl relative overflow-hidden ">
-    <div className="flex justify-center items-center  p-5 mr-14 mt-4">
-    <img src={crypto} alt="a man investing" className="w-[650px] object-contain rounded-[10%] shadow-lg items-center"/>
-    </div>
+            <p className="text-sm text-gray-600 mt-4 text-center">
+              Not signed up yet?{" "}
+              <span
+                className="text-[#2239A5] font-medium cursor-pointer hover:underline"
+                onClick={() => navigate("/signup")}
+              >
+                Sign Up
+              </span>
+            </p>
+          </form>
+        </div>
 
-    
-    
+        {/* Right Section (Illustration) */}
+        <div className="hidden md:flex bg-[#88BDF2] justify-center items-center">
+          <img
+            src={cryptoImg}
+            alt="Login Illustration"
+            className="w-[80%] object-contain mix-blend-multiply"
+          />
+        </div>
+      </div>
     </div>
-    </div>
-</div>
-)
-}
+  );
+};
