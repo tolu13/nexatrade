@@ -3,7 +3,7 @@ import { useAuthStore } from "./store/authstore";
 import { toast } from "react-toastify";
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL ?? "https://nexatradeserver.onrender.com",
+  baseURL: import.meta.env.VITE_API_URL ?? "https://server-z0rg.onrender.com",
   // ❌ REMOVE unless you are using httpOnly cookies
   // withCredentials: true,
 });
@@ -27,7 +27,7 @@ api.interceptors.request.use(
 
     return config;
   },
-  (error) => Promise.reject(error)
+  (error) => Promise.reject(error),
 );
 
 /**
@@ -51,7 +51,7 @@ api.interceptors.response.use(
     }
 
     return Promise.reject(error);
-  }
+  },
 );
 
 export default api;
