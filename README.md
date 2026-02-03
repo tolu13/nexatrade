@@ -70,7 +70,7 @@ Deployment: Docker-ready
 
 🛠️ Installation
 # Clone the repo
-git clone https://github.com/yourusername/nexatrade.git
+git clone https://github.com/tolu13/nexatrade.git
 cd nexatrade
 
 # Install dependencies
