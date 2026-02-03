@@ -6,10 +6,13 @@ import { z } from "zod";
 import { useAuthStore } from "../../lib/store/authstore";
 import nexatradeLogo from "/nexatrade-high-resolution-logo.png";
 import cryptoImg from "../../assets/Cryptocurrency mining.png";
+  import { useEffect } from "react";
 
 const signupSchema = z.object({
   email: z.string().email({ message: "Invalid email" }),
-  password: z.string().min(6, { message: "Password must be at least 6 characters" }),
+  password: z
+    .string()
+    .min(6, { message: "Password must be at least 6 characters" }),
   role: z.enum(["TRADER", "ADMIN"], { required_error: "Role is required" }),
 });
 
@@ -19,8 +22,15 @@ export const SignupPage = () => {
   const [role, setRole] = useState<"TRADER" | "ADMIN">("TRADER");
   const [showPassword, setShowPassword] = useState(false);
 
-  const { signup } = useAuthStore();
+  const signup = useAuthStore((state) => state.signup);
+  const loading = useAuthStore((state) => state.loading);
   const navigate = useNavigate();
+
+
+
+useEffect(() => {
+  useAuthStore.setState({ loading: false });
+}, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -28,9 +38,8 @@ export const SignupPage = () => {
 
     if (!result.success) {
       toast.error(
-        Object.values(result.error.flatten().fieldErrors)
-          .flat()
-          .join(", ") || "Invalid input"
+        Object.values(result.error.flatten().fieldErrors).flat().join(", ") ||
+          "Invalid input",
       );
       return;
     }
@@ -72,6 +81,7 @@ export const SignupPage = () => {
               <input
                 type={showPassword ? "text" : "password"}
                 value={password}
+                disabled={loading}
                 placeholder="Password"
                 className="w-full p-3 border rounded-xl focus:ring-2 focus:ring-blue-400 outline-none"
                 onChange={(e) => setPassword(e.target.value)}
@@ -95,9 +105,17 @@ export const SignupPage = () => {
 
             <button
               type="submit"
-              className="w-full py-3 bg-[#2239A5] text-white rounded-xl hover:bg-[#132a90] transition"
+              disabled={loading}
+              className={`
+    w-full py-3 rounded-xl text-white transition
+    ${
+      loading
+        ? "bg-gray-400 cursor-not-allowed"
+        : "bg-[#2239A5] hover:bg-[#132a90]"
+    }
+  `}
             >
-              Sign Up
+              {loading ? "Signing Up..." : "Sign Up"}
             </button>
 
             <p className="text-sm text-gray-600 mt-4 text-center">

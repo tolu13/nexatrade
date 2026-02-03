@@ -17,7 +17,7 @@ interface LoginResponse {
   user: User;
 }
 
-interface AuthState {
+export interface AuthState {
   token: string | null;
   user: User | null;
   loading: boolean;
@@ -63,6 +63,7 @@ export const useAuthStore = create<AuthState>()(
       },
 
       signup: async (email: string, password: string, role: string) => {
+       
         set({ loading: true, error: null });
         try {
           await api.post("/auth/signup", { email, password, role });
@@ -84,7 +85,8 @@ export const useAuthStore = create<AuthState>()(
     }),
     {
       name: "auth-storage", // name of the item in storage
-      storage: createJSONStorage(() => localStorage), // (optional) by default, 'localStorage' is used
+      storage: createJSONStorage(() => localStorage),
+      partialize: (state) => ({ token: state.token, user: state.user }),  // (optional) by default, 'localStorage' is used
     }
   )
 );
