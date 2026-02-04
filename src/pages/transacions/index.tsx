@@ -25,7 +25,7 @@ export const Transactions = () => {
       if (!token) return;
       setLoading(true);
       try {
-        const res = await axios.get("https://nexatrade-weld.vercel.app/orders/user", {
+        const res = await axios.get("https://server-z0rg.onrender.com/orders/user", {
           headers: { Authorization: `Bearer ${token}` },
         });
         setOrders(res.data);

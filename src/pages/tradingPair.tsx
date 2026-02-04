@@ -12,7 +12,7 @@ export const TradingPairsList = ({ onSelectPair }: { onSelectPair: (pair: Tradin
   const { connect, disconnect,  onMarketPriceUpdate } = useOrderBookStore();
 
   useEffect(() => {
-    fetch("https://nexatrade-weld.vercel.app/tradingpair")
+    fetch("https://server-z0rg.onrender.com/tradingpair")
       .then(res => res.json())
       .then(setPairs)
       .catch(console.error);
