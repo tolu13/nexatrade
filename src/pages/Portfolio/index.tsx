@@ -31,7 +31,7 @@ export const Portfolio = () => {
       {/* ✅ If no portfolio data */}
       {portfolio.length === 0 ? (
         <div className="flex flex-col justify-center items-center py-1 text-gray-500">
-          <PiSmileySadLight size={60} className="mb-4 text-gray-400" />
+          <PiSmileySadLight size={60} className="mb-4 text-gray-400 bg-amber-300" />
           <h3 className="text-lg font-semibold text-[#A2574F]">
             No Assets Yet
           </h3>

@@ -12,30 +12,33 @@ interface OrderBookState {
   sellOrders: Order[];
   lastPrice: number;
 }
-
+/*
 interface MarketPrice {
   pairId: string;
   symbol: string;
   price: number;
 }
+}*/
 
 export const Market: React.FC = () => {
   const {
     connect,
     disconnect,
+    markets,
     onOrderBookUpdate,
     onTradeMatched,
     onMarketPriceUpdate,
   } = useOrderBookStore();
 
   // 🔹 Store multiple pairs instead of one
-  const [markets, setMarkets] = useState<Record<string, MarketPrice>>({});
+ 
   const [orderBooks, setOrderBooks] = useState<
     Record<string, OrderBookState>
   >({});
 
   useEffect(() => {
     connect();
+    
 
     // Handle order book updates for all pairs
     onOrderBookUpdate(
@@ -47,21 +50,29 @@ export const Market: React.FC = () => {
       }
     );
 
-    // Handle live market price updates
-    onMarketPriceUpdate((data: MarketPrice) => {
-      setMarkets((prev) => ({
-        ...prev,
-        [data.pairId]: data,
-      }));
-    });
+ 
 
     onTradeMatched((trade) => {
       console.log("New trade:", trade);
     });
 
-    return () => {
-      disconnect();
-    };
+    const offOrderBook = onOrderBookUpdate((data) => {
+    setOrderBooks((prev) => ({
+      ...prev,
+      [data.pairId]: data.orderBook,
+    }));
+  });
+
+  const offTradeMatched = onTradeMatched((trade) => {
+    console.log("New trade:", trade);
+  });
+
+  return () => {
+    offOrderBook?.();
+    offTradeMatched?.();
+  };
+
+    
   }, [
     connect,
     disconnect,

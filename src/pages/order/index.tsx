@@ -3,19 +3,25 @@ import React, { useState } from 'react';
 import { useOrderBookStore } from '../../orderbooksocket';
 
 export const OrderForm: React.FC = () => {
-  const { placeOrder } = useOrderBookStore();
+  const { placeOrder, selectedPairId } = useOrderBookStore();
   const [order, setOrder] = useState({
     type: 'LIMIT' as 'MARKET' | 'LIMIT',
     side: 'BUY' as 'BUY' | 'SELL',
     price: 0,
     quantity: 0,
-    pairId: '1eb17832-2fb5-41bf-9efc-18c20ffd6564' // Match your backend pairId
+   // pairId: '' // Match your backend pairId
   });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!selectedPairId) {
+      alert("No trading pair selected");
+      return;
+    }
+
     placeOrder({
       ...order,
+      pairId: selectedPairId || '', // Use selected pairId from store
       timestamp: new Date()
     });
   };

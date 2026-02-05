@@ -14,6 +14,9 @@ interface OrderBookState {
   connected: boolean;
   markets: Record<string, MarketPrice>; // ✅ NEW: store for live prices
 tradingpairs: TradingPair[];
+selectedPairId: string | null;
+setSelectedPairId: (id: string) => void;
+
 
   connect: () => void;
   disconnect: () => void;
@@ -34,6 +37,9 @@ export const useOrderBookStore = create<OrderBookState>((set, get) => ({
   connected: false,
   markets: {}, // ✅ initialize empty market list
   tradingpairs: [],
+  selectedPairId: null,
+
+  setSelectedPairId: (id) => set({ selectedPairId: id }),
 
   connect: () => {
     const { token } = useAuthStore.getState();
